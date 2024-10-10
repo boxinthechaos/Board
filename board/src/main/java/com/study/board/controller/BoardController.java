@@ -94,5 +94,6 @@ public class BoardController {
         }
 
         return "redirect:/board/list";
+// 왜 뭐가 문제인건데
     }
 }
