@@ -1,6 +1,7 @@
 package com.study.board.controller;
 
 import com.study.board.entity.Board;
+import com.study.board.exception.FileNotPresentException; // 예외 임포트
 import com.study.board.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,12 +28,10 @@ public class BoardController {
 
     @PostMapping("/board/writepro")
     public String boardWritePro(Board board, Model model, MultipartFile file) throws Exception {
-        // 파일이 비어 있는지 체크 (NullPointerException 방지)
-        if (file != null && !file.isEmpty()) {
-            boardService.write(board, file);
-        } else {
-            boardService.write(board, null); // 파일이 없으면 null로 처리
+        if (!file.isEmpty()) {
+            throw new FileNotPresentException("파일이 존재하지 않습니다.");
         }
+        boardService.write(board, file);
 
         return "redirect:/board/list";
     }
@@ -42,13 +41,11 @@ public class BoardController {
 
         Page<Board> list = null;
 
-        if(searchKeyword == null) {
+        if (searchKeyword == null) {
             list = boardService.boardList(pageable);
-        }else {
+        } else {
             list = boardService.boardSearchList(searchKeyword, pageable);
         }
-
-
 
         int nowPage = list.getPageable().getPageNumber() + 1;
         int startPage = Math.max(nowPage - 4, 1);
@@ -86,13 +83,13 @@ public class BoardController {
         boardTemp.setTitle(board.getTitle());
         boardTemp.setContent(board.getContent());
 
-        // 파일이 비어 있는지 체크 (NullPointerException 방지)
-        if (file != null && !file.isEmpty()) {
-            boardService.write(boardTemp, file);
-        } else {
-            boardService.write(boardTemp, null); // 파일이 없으면 null로 처리
+
+        if (!file.isEmpty()) {
+            throw new FileNotPresentException("파일이 존재하지 않습니다.");
         }
 
-        return "redirect:/board/list";
+        boardService.write(boardTemp, file);
+
+        return "redirect:/board";
     }
 }
