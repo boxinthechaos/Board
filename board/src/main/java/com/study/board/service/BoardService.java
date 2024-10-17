@@ -58,4 +58,8 @@ public class BoardService {
     public void boardDelete(Integer id) {
         boardRepository.deleteById(id);
     }
+
+    public void updateWithoutFile(Board board) {
+        boardRepository.save(board); // 파일 없이 기존 데이터만 저장
+    }
 }

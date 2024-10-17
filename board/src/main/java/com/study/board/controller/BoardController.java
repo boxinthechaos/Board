@@ -26,9 +26,9 @@ public class BoardController {
         return "boardwrite";
     }
 
-    @PostMapping("/board/writepro")
+    @PostMapping("/board")
     public String boardWritePro(Board board, Model model, MultipartFile file) throws Exception {
-        if (!file.isEmpty()) {
+        if (file.isEmpty()) {
             throw new FileNotPresentException("파일이 존재하지 않습니다.");
         }
         boardService.write(board, file);
@@ -79,17 +79,21 @@ public class BoardController {
 
     @PostMapping("/board/update/{id}")
     public String boardUpdate(@PathVariable("id") Integer id, Board board, MultipartFile file) throws Exception {
-        Board boardTemp = boardService.boardview(id);
+        Board boardTemp = boardService.boardview(id); // 기존 글을 조회
+
+        // 제목과 내용을 업데이트
         boardTemp.setTitle(board.getTitle());
         boardTemp.setContent(board.getContent());
 
-
-        if (!file.isEmpty()) {
-            throw new FileNotPresentException("파일이 존재하지 않습니다.");
+        // 파일이 null인지 확인 후 처리
+        if (file != null && !file.isEmpty()) {
+            boardService.write(boardTemp, file); // 파일이 있을 때만 파일 처리
+        } else {
+            boardService.updateWithoutFile(boardTemp); // 파일이 없을 경우 별도의 업데이트 로직
         }
 
-        boardService.write(boardTemp, file);
-
-        return "redirect:/board";
+        return "redirect:/board/list"; // list로 경로 수정
     }
+
+
 }

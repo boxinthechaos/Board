@@ -5,19 +5,18 @@
     <title>게시물 작성폼</title>
 </head>
 <style>
-
-    .Layout{
-        width : 500px;
+    .Layout {
+        width: 500px;
         margin: 0 auto;
-        margin-top : 40px ;
+        margin-top: 40px;
     }
 
-    .Layout input{
+    .Layout input {
         width: 100%;
         box-sizing: border-box;
     }
 
-    .Layout textarea{
+    .Layout textarea {
         width: 100%;
         margin-top: 10px;
         min-height: 300px;
@@ -25,13 +24,13 @@
 </style>
 
 <body>
-    <div class = "Layout">
-        <form action="/board/writepro" method="post" enctype="multipart/form-data">
-        <input name = "title" type="text">
-            <textarea name = content></textarea>
-            <input type="file" name="file">
-            <button type="submit">작성</button>
-        </form>
-    </div>
+<div class="Layout">
+    <form action="/board" method="post" enctype="multipart/form-data">
+        <input name="title" type="text" placeholder="제목을 입력하세요" required>
+        <textarea name="content" placeholder="내용을 입력하세요" required></textarea>
+        <input type="file" name="file" required>
+        <button type="submit">작성</button>
+    </form>
+</div>
 </body>
 </html>
